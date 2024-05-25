@@ -26,8 +26,7 @@ func snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// response
-	msg := fmt.Sprintf("Display a snippet with id: %d...", id)
-	_, err = w.Write([]byte(msg))
+	_, err = fmt.Fprintf(w, "Display a specific snippet with ID: %d...", id)
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
@@ -58,7 +57,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", home) // restrict for / only
 	// register new handlers
-	mux.HandleFunc("GET/snippet/view/{id}/{$}", snippetView)
+	mux.HandleFunc("GET /snippet/view/{id}/{$}", snippetView)
 	mux.HandleFunc("GET /snippet/create", snippetCreate)
 	mux.HandleFunc("POST /snippet/create", snippetCreatePost)
 
