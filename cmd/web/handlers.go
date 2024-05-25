@@ -10,10 +10,17 @@ import (
 
 // home handler function
 func home(w http.ResponseWriter, r *http.Request) {
-	// use Hdeader.Add() method to add custom header
+	// use Header.Add() method to add custom header
 	w.Header().Add("Server", "Go")
-	// use template.ParseFiles() to read the template into a template set
-	ts, err := template.ParseFiles("./ui/html/pages/home.tmpl")
+
+	// slice with the two template files
+	files := []string{
+		"./ui/html/base.tmpl",
+		"./ui/html/pages/home.tmpl",
+	}
+
+	// use template.ParseFiles() to read the files in the slice
+	ts, err := template.ParseFiles(files...)
 	if err != nil {
 		log.Print(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -21,7 +28,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Execute method on the template set to write the template content
-	err = ts.Execute(w, nil)
+	err = ts.ExecuteTemplate(w, "base", nil)
 	if err != nil {
 		log.Print(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
