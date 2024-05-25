@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 )
@@ -49,20 +48,4 @@ func snippetCreatePost(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
-}
-
-// main function
-func main() {
-	// create a servemux and register the home function
-	mux := http.NewServeMux()
-	mux.HandleFunc("GET /{$}", home) // restrict for / only
-	// register new handlers
-	mux.HandleFunc("GET /snippet/view/{id}/{$}", snippetView)
-	mux.HandleFunc("GET /snippet/create", snippetCreate)
-	mux.HandleFunc("POST /snippet/create", snippetCreatePost)
-
-	log.Print("starting on: localhost:4000")
-
-	err := http.ListenAndServe(":4000", mux)
-	log.Fatal(err)
 }
