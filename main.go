@@ -41,6 +41,9 @@ func snippetCreate(w http.ResponseWriter, r *http.Request) {
 
 // add a snippet handler to POST snippet
 func snippetCreatePost(w http.ResponseWriter, r *http.Request) {
+	// user w.writeHeader to return a 201
+	w.WriteHeader(201)
+	// body as normal
 	_, err := w.Write([]byte("Save a new snippet."))
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -57,7 +60,7 @@ func main() {
 	mux.HandleFunc("GET /snippet/create", snippetCreate)
 	mux.HandleFunc("POST /snippet/create", snippetCreatePost)
 
-	log.Print("starting on: 4000")
+	log.Print("starting on: localhost:4000")
 
 	err := http.ListenAndServe(":4000", mux)
 	log.Fatal(err)
