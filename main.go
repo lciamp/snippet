@@ -45,7 +45,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/{$}", home) // restrict for / only
 	// register new handlers
-	mux.HandleFunc("/snippet/view/{id}", snippetView)
+	mux.HandleFunc("/snippet/view/{id}/{$}", snippetView)
 	mux.HandleFunc("/snippet/create", snippetCreate)
 
 	log.Print("starting on: 4000")
