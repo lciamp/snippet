@@ -42,7 +42,7 @@ func snippetCreate(w http.ResponseWriter, r *http.Request) {
 // add a snippet handler to POST snippet
 func snippetCreatePost(w http.ResponseWriter, r *http.Request) {
 	// user w.writeHeader to return a 201
-	w.WriteHeader(201)
+	w.WriteHeader(http.StatusCreated)
 	// body as normal
 	_, err := w.Write([]byte("Save a new snippet."))
 	if err != nil {
