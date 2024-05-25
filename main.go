@@ -31,9 +31,17 @@ func snippetView(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// add a snippet handler function
+// add a snippet handler function to GET snippet
 func snippetCreate(w http.ResponseWriter, r *http.Request) {
 	_, err := w.Write([]byte("Display form for creating a new snippet..."))
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+}
+
+// add a snippet handler to POST snippet
+func snippetCreatePost(w http.ResponseWriter, r *http.Request) {
+	_, err := w.Write([]byte("Save a new snippet."))
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
@@ -47,6 +55,7 @@ func main() {
 	// register new handlers
 	mux.HandleFunc("GET /snippet/view/{id}/{$}", snippetView)
 	mux.HandleFunc("GET /snippet/create", snippetCreate)
+	mux.HandleFunc("POST /snippet/create", snippetCreatePost)
 
 	log.Print("starting on: 4000")
 
