@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -10,10 +12,21 @@ import (
 func home(w http.ResponseWriter, r *http.Request) {
 	// use Hdeader.Add() method to add custom header
 	w.Header().Add("Server", "Go")
-	_, err := w.Write([]byte("Hello from Snippet!"))
+	// use template.ParseFiles() to read the template into a template set
+	ts, err := template.ParseFiles("./ui/html/pages/home.tmpl")
 	if err != nil {
-		fmt.Println("Error:", err)
+		log.Print(err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
+
+	// Execute method on the template set to write the template content
+	err = ts.Execute(w, nil)
+	if err != nil {
+		log.Print(err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+
 }
 
 // add snippetView handler function
