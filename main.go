@@ -35,7 +35,7 @@ func snippetCreate(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// create a servemux and register the home function
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", home)
+	mux.HandleFunc("/{$}", home) // restrict for / only
 	// register new handlers
 	mux.HandleFunc("/snippet/view", snippetView)
 	mux.HandleFunc("/snippet/create", snippetCreate)
