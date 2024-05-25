@@ -9,6 +9,8 @@ import (
 
 // home handler function
 func home(w http.ResponseWriter, r *http.Request) {
+	// use Hdeader.Add() method to add custom header
+	w.Header().Add("Server", "Go")
 	_, err := w.Write([]byte("Hello from Snippet!"))
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -41,7 +43,7 @@ func snippetCreate(w http.ResponseWriter, r *http.Request) {
 
 // add a snippet handler to POST snippet
 func snippetCreatePost(w http.ResponseWriter, r *http.Request) {
-	// user w.writeHeader to return a 201
+	// user w.writeHeader to return a 201 using http constants
 	w.WriteHeader(http.StatusCreated)
 	// body as normal
 	_, err := w.Write([]byte("Save a new snippet."))
@@ -56,7 +58,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /{$}", home) // restrict for / only
 	// register new handlers
-	mux.HandleFunc("GET /snippet/view/{id}/{$}", snippetView)
+	mux.HandleFunc("GET/snippet/view/{id}/{$}", snippetView)
 	mux.HandleFunc("GET /snippet/create", snippetCreate)
 	mux.HandleFunc("POST /snippet/create", snippetCreatePost)
 
