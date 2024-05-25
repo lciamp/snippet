@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 // home handler function
@@ -16,7 +17,15 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 // add snippetView handler function
 func snippetView(w http.ResponseWriter, r *http.Request) {
-	_, err := w.Write([]byte("Display a specific snippet..."))
+	// get wildcard, check if it's a positive integer
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil || id < 1 {
+		http.NotFound(w, r)
+		return
+	}
+	// response
+	msg := fmt.Sprintf("Display a snippet with id: %d...", id)
+	_, err = w.Write([]byte(msg))
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
@@ -28,7 +37,6 @@ func snippetCreate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
-
 }
 
 // main function
@@ -37,7 +45,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/{$}", home) // restrict for / only
 	// register new handlers
-	mux.HandleFunc("/snippet/view", snippetView)
+	mux.HandleFunc("/snippet/view/{id}", snippetView)
 	mux.HandleFunc("/snippet/create", snippetCreate)
 
 	log.Print("starting on: 4000")
