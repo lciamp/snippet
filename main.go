@@ -43,10 +43,10 @@ func snippetCreate(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// create a servemux and register the home function
 	mux := http.NewServeMux()
-	mux.HandleFunc("/{$}", home) // restrict for / only
+	mux.HandleFunc("GET /{$}", home) // restrict for / only
 	// register new handlers
-	mux.HandleFunc("/snippet/view/{id}/{$}", snippetView)
-	mux.HandleFunc("/snippet/create", snippetCreate)
+	mux.HandleFunc("GET /snippet/view/{id}/{$}", snippetView)
+	mux.HandleFunc("GET /snippet/create", snippetCreate)
 
 	log.Print("starting on: 4000")
 
