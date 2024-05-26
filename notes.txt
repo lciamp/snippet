@@ -3,4 +3,9 @@ Simple way:
 find ./ui/static -type d -exec touch {}/index.html \;
 
 Better way:
-Custom implementation of http.FileSystem that returns os.ErrNotExist.
+Custom implementation of http.FileSystem, see helpers.go
+
+Cli fags: (don't hard code config)
+fix: go run ./cmd/web --addr=":80"
+
+    addr := flag.String("addr", ":4000", "HTTP network address")
