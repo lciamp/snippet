@@ -1,0 +1,6 @@
+Disable dir listings:
+Simple way:
+find ./ui/static -type d -exec touch {}/index.html \;
+
+Better way:
+Custom implementation of http.FileSystem that returns os.ErrNotExist.
