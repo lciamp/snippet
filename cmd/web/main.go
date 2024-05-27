@@ -13,7 +13,9 @@ func main() {
 	flag.Parse()
 
 	// add structured logger, use JSON logging
-	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelDebug,
+	}))
 
 	// create mux
 	mux := http.NewServeMux()
