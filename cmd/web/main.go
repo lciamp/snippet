@@ -12,8 +12,8 @@ func main() {
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	flag.Parse()
 
-	// add structured logger
-	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+	// add structured logger, use JSON logging
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
 	// create mux
 	mux := http.NewServeMux()
@@ -34,7 +34,7 @@ func main() {
 	mux.HandleFunc("POST /snippet/create", snippetCreatePost)
 
 	// start server
-	logger.Info("starting server", slog.String("addr", ":4000"))
+	logger.Info("starting server", slog.String("addr", *addr))
 	err := http.ListenAndServe(*addr, mux)
 	logger.Error(err.Error())
 	os.Exit(1)
