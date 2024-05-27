@@ -34,7 +34,7 @@ func main() {
 	mux.HandleFunc("POST /snippet/create", snippetCreatePost)
 
 	// start server
-	logger.Info("starting on: localhost", "addr", *addr)
+	logger.Info("starting server", slog.String("addr", ":4000"))
 	err := http.ListenAndServe(*addr, mux)
 	logger.Error(err.Error())
 	os.Exit(1)
