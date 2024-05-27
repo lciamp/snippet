@@ -12,9 +12,10 @@ func main() {
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	flag.Parse()
 
-	// add structured logger, use JSON logging
+	// add structured logger, use JSON logging, add debug log level and file/line number source
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-		Level: slog.LevelDebug,
+		Level:     slog.LevelDebug,
+		AddSource: true,
 	}))
 
 	// create mux
