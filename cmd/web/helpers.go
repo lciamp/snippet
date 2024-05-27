@@ -2,10 +2,10 @@ package main
 
 import (
 	"net/http"
-	"os"
+	"path/filepath"
 )
 
-// custom fileSystem to disable Fileserver Directory Listings
+// custom fileSystem to disable File Server Directory Listings
 type neuteredFileSystem struct {
 	fs http.FileSystem
 }
@@ -18,13 +18,15 @@ func (nfs neuteredFileSystem) Open(path string) (http.File, error) {
 	}
 
 	s, err := f.Stat()
-	if err != nil {
-		return nil, err
-	}
-
 	if s.IsDir() {
-		return nil, os.ErrNotExist
+		index := filepath.Join(path, "index.html")
+		if _, err := nfs.fs.Open(index); err != nil {
+			closeErr := f.Close()
+			if closeErr != nil {
+				return nil, closeErr
+			}
+			return nil, err
+		}
 	}
-
 	return f, nil
 }
