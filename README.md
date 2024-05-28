@@ -10,3 +10,7 @@ I've messed around with the Gin framework for making go apis and was talking to 
 So I figured I would check out his books.
 
 So far, "Let's Go" reminds me a lot of the "Flask Book" by Miguel Grinberg : https://flaskbook.com/. Which is a must read for anyone in the python Web App / API space.
+
+This book is reminding be why I love programming.
+
+!LFG 
