@@ -19,7 +19,7 @@ func main() {
 	// add structured logger, use JSON logging, add debug log level and file/line number source
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
-	// app struct with new logger
+	// create app struct for dependency injection on handlers
 	app := &application{
 		logger: logger,
 	}
