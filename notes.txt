@@ -9,3 +9,6 @@ Cli fags: (don't hard code config)
 fix: go run ./cmd/web --addr=":80"
 
     addr := flag.String("addr", ":4000", "HTTP network address")
+
+NOTE:
+using an application struct will not work for dependency injection if handlers are in different packages
