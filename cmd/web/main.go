@@ -6,12 +6,14 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"snippet.lciamp.xyz/internal/models"
 
 	_ "github.com/go-sql-driver/mysql" // mysql driver
 )
 
 type application struct {
-	logger *slog.Logger
+	logger   *slog.Logger
+	snippets *models.SnippetModel
 }
 
 func main() {
@@ -24,11 +26,6 @@ func main() {
 	// add structured logger, use JSON logging, add debug log level and file/line number source
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
-	// create app struct for dependency injection on handlers
-	app := &application{
-		logger: logger,
-	}
-
 	// db connection pool setup
 	db, err := openDB(*dsn)
 	if err != nil {
@@ -36,6 +33,12 @@ func main() {
 		os.Exit(1)
 	}
 	defer db.Close()
+
+	// create app struct for dependency injection on handlers
+	app := &application{
+		logger:   logger,
+		snippets: &models.SnippetModel{DB: db},
+	}
 
 	// start server
 	logger.Info("starting server", slog.String("addr", *addr))
