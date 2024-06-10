@@ -1,9 +1,12 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
+	"os"
+	"snippet.lciamp.xyz/internal/models"
 	"strconv"
 )
 
@@ -42,11 +45,22 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	// response
-	_, err = fmt.Fprintf(w, "Display a specific snippet with ID: %d...", id)
+	// response, use SnippetModel's Get method
+	snippet, err := app.snippets.Get(id)
 	if err != nil {
-		fmt.Println("Error:", err)
+		if errors.Is(err, models.ErrNoRecord) {
+			http.NotFound(w, r)
+		} else {
+			app.serverError(w, r, err)
+		}
+		return
 	}
+	// write snippet data as plain-text in http response
+	_, err = fmt.Fprintf(w, "%+v", snippet)
+	if err != nil {
+		os.Exit(1)
+	}
+
 }
 
 // add a snippet handler function to GET snippet
