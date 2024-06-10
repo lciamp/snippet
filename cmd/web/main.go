@@ -47,7 +47,7 @@ func main() {
 	os.Exit(1)
 }
 
-// wrap soq.Open() and return sql.DB connection pool for DSN
+// wrap sql.Open() and return sql.DB connection pool for DSN
 func openDB(dsn string) (*sql.DB, error) {
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
