@@ -59,11 +59,19 @@ func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 
 // add a snippet handler to POST snippet
 func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) {
-	// user w.writeHeader to return a 201 using http constants
-	w.WriteHeader(http.StatusCreated)
-	// body as normal
-	_, err := w.Write([]byte("Save a new snippet."))
+	// test
+	title := "O snail"
+	content := "O snail\nClimb Mount Fuji\nBut slowly, slowly\n\n-Kobayashi Issa"
+	expires := 7
+
+	// pass data to insert
+	id, err := app.snippets.Insert(title, content, expires)
 	if err != nil {
-		fmt.Println("Error:", err)
+		app.serverError(w, r, err)
+		return
 	}
+
+	// redirect to new snippet
+	http.Redirect(w, r, fmt.Sprintf("/snippet/view/%d", id), http.StatusSeeOther)
+
 }

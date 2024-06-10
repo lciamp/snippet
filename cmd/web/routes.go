@@ -17,7 +17,7 @@ func (app *application) routes() *http.ServeMux {
 
 	// add handler functions to endpoints
 	mux.HandleFunc("GET /{$}", app.home) // restrict for / only
-	mux.HandleFunc("GET /snippet/view/{id}/{$}", app.snippetView)
+	mux.HandleFunc("GET /snippet/view/{id}", app.snippetView)
 	mux.HandleFunc("GET /snippet/create", app.snippetCreate)
 	mux.HandleFunc("POST /snippet/create", app.snippetCreatePost)
 
