@@ -44,17 +44,14 @@ func (m *SnippetModel) Insert(title string, content string, expires int) (int, e
 
 // Get function to get a snippet from db
 func (m *SnippetModel) Get(id int) (Snippet, error) {
-	// stmt to get snippet
-	stmt := `SELECT id, title, content, created, expires FROM snippets 
-    WHERE expires > UTC_TIMESTAMP() AND id = ?`
-
-	// returns pointer to row object
-	row := m.DB.QueryRow(stmt, id)
-
 	// new s Snippet struct
 	var s Snippet
 
-	err := row.Scan(&s.ID, &s.Title, &s.Content, &s.Created, &s.Expires)
+	err := m.DB.QueryRow(`SELECT id, title, content, created, expires 
+							FROM snippets 
+							WHERE expires > UTC_TIMESTAMP() 
+							AND id = ?`, id).Scan(&s.ID, &s.Title, &s.Content, &s.Created, &s.Expires)
+
 	if err != nil {
 		// if no rows Scan will return ErrNoRows
 		if errors.Is(err, sql.ErrNoRows) {
