@@ -89,7 +89,6 @@ func (m *SnippetModel) Latest() ([]Snippet, error) {
 		var s Snippet
 
 		err = rows.Scan(&s.ID, &s.Title, &s.Content, &s.Created, &s.Expires)
-
 		if err != nil {
 			return nil, err
 		}
@@ -102,5 +101,6 @@ func (m *SnippetModel) Latest() ([]Snippet, error) {
 		return nil, err
 	}
 
+	// all good return snippets slice
 	return snippets, nil
 }

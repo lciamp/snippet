@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
+	//"html/template"
 	"net/http"
 	"os"
 	"snippet.lciamp.xyz/internal/models"
@@ -15,25 +15,36 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	// use Header.Add() method to add custom header
 	w.Header().Add("Server", "Go")
 
-	// slice with the two template files
-	files := []string{
-		"./ui/html/base.tmpl",
-		"./ui/html/partials/nav.tmpl",
-		"./ui/html/pages/home.tmpl",
+	//get last 10 snippets
+	snippets, err := app.snippets.Latest()
+	if err != nil {
+		app.serverError(w, r, err)
 	}
+
+	// print snippets
+	for _, snippet := range snippets {
+		fmt.Fprintf(w, "%+v\n", snippet)
+	}
+
+	// slice with the two template files
+	//files := []string{
+	//	"./ui/html/base.tmpl",
+	//	"./ui/html/partials/nav.tmpl",
+	//	"./ui/html/pages/home.tmpl",
+	//}
 
 	// use template.ParseFiles() to read the files in the slice
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, r, err)
-		return
-	}
-
-	// Execute method on the template set to write the template content
-	err = ts.ExecuteTemplate(w, "base", nil)
-	if err != nil {
-		app.serverError(w, r, err)
-	}
+	//ts, err := template.ParseFiles(files...)
+	//if err != nil {
+	//	app.serverError(w, r, err)
+	//	return
+	//}
+	//
+	//// Execute method on the template set to write the template content
+	//err = ts.ExecuteTemplate(w, "base", nil)
+	//if err != nil {
+	//	app.serverError(w, r, err)
+	//}
 
 }
 
