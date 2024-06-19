@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"runtime/debug"
+	"time"
 )
 
 // 500 error at log error level
@@ -74,5 +75,11 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, status in
 
 	// write contents of buffer to response writer
 	buf.WriteTo(w)
+}
 
+// new template data helper returns pointer to templateData structure
+func (app *application) newTemplateData(r *http.Request) templateData {
+	return templateData{
+		CurrentYear: time.Now().Year(),
+	}
 }

@@ -19,35 +19,13 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 	}
 
-	//// slice with the template files
-	//files := []string{
-	//	"./ui/html/base.tmpl",
-	//	"./ui/html/partials/nav.tmpl",
-	//	"./ui/html/pages/home.tmpl",
-	//}
+	// call newTemplateData
+	data := app.newTemplateData(r)
+	data.Snippets = snippets
 
 	// use new render helper
-	app.render(w, r, http.StatusOK, "home.tmpl", templateData{
-		Snippets: snippets,
-	})
+	app.render(w, r, http.StatusOK, "home.tmpl", data)
 
-	//// use template.ParseFiles() to read the files in the slice
-	//ts, err := template.ParseFiles(files...)
-	//if err != nil {
-	//	app.serverError(w, r, err)
-	//	return
-	//}
-
-	//// create template data struct to hold the slice of snippets
-	//data := templateData{
-	//	Snippets: snippets,
-	//}
-	//
-	//// Execute method on the template set to write the template content, use templateData struct
-	//err = ts.ExecuteTemplate(w, "base", data)
-	//if err != nil {
-	//	app.serverError(w, r, err)
-	//}
 }
 
 // add snippetView handler function
@@ -69,41 +47,12 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// call newTemplateData helper
+	data := app.newTemplateData(r)
+	data.Snippet = snippet
+
 	// use new render helper
-	app.render(w, r, http.StatusOK, "view.tmpl", templateData{
-		Snippet: snippet,
-	})
-
-	//// slice for templates
-	//files := []string{
-	//	"./ui/html/base.tmpl",
-	//	"./ui/html/partials/nav.tmpl",
-	//	"./ui/html/pages/view.tmpl",
-	//}
-	//
-	//// parse tmpl files
-	//ts, err := template.ParseFiles(files...)
-	//if err != nil {
-	//	app.serverError(w, r, err)
-	//	return
-	//}
-	//
-	//// create templateData struct folding snippet data
-	//data := &templateData{
-	//	Snippet: snippet,
-	//}
-	//
-	//// execute templates
-	//err = ts.ExecuteTemplate(w, "base", data)
-	//if err != nil {
-	//	app.serverError(w, r, err)
-	//}
-
-	// write snippet data as plain-text in http response
-	//_, err = fmt.Fprintf(w, "%+v", snippet)
-	//if err != nil {
-	//	os.Exit(1)
-	//}
+	app.render(w, r, http.StatusOK, "view.tmpl", data)
 
 }
 
