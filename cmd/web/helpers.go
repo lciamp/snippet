@@ -63,7 +63,7 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, status in
 	// initalize new buffer
 	buf := new(bytes.Buffer)
 
-	// write template to buffer
+	// write template to buffer and check for runtime errors
 	err := ts.ExecuteTemplate(buf, "base", data)
 	if err != nil {
 		app.serverError(w, r, err)

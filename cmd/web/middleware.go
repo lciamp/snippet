@@ -2,10 +2,11 @@ package main
 
 import "net/http"
 
+// middleware for common headers - be careful with CSP Headers, check browser logs
 func commonHeaders(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		w.Header().Set("Content-Security-Policy", "default-src 'self'; style-src 'self' fonts.googleapis.com; font-src fonts.gstatic.com")
+		w.Header().Set("Content-Security-Policy", "style-src 'self' fonts.googleapis.com; font-src fonts.gstatic.com")
 
 		w.Header().Set("Referrer-Policy", "origin-when-cross-origin")
 		w.Header().Set("X-Content-Type-Options", "nosniff")
@@ -13,6 +14,22 @@ func commonHeaders(next http.Handler) http.Handler {
 		w.Header().Set("X-XSS-Protection", "0")
 
 		w.Header().Set("Server", "Go")
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+// log requests middleware implement on application
+func (app *application) logRequest(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var (
+			ip     = r.RemoteAddr
+			proto  = r.Proto
+			method = r.Method
+			uri    = r.URL.RequestURI()
+		)
+
+		app.logger.Info("received request", "ip", ip, "proto", proto, "method", method, "uri", uri)
 
 		next.ServeHTTP(w, r)
 	})

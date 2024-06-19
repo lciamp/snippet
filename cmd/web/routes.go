@@ -2,6 +2,7 @@ package main
 
 import "net/http"
 
+// update return to http.Header
 func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
 
@@ -17,5 +18,6 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("GET /snippet/create", app.snippetCreate)
 	mux.HandleFunc("POST /snippet/create", app.snippetCreatePost)
 
+	// wrap mux in commonHeaders middleware
 	return commonHeaders(mux)
 }
