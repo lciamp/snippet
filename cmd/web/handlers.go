@@ -20,31 +20,35 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 	}
 
-	// print snippets
-	for _, snippet := range snippets {
-		fmt.Fprintf(w, "%+v\n", snippet)
+	//// print snippets
+	//for _, snippet := range snippets {
+	//	fmt.Fprintf(w, "%+v\n", snippet)
+	//}
+
+	// slice with the template files
+	files := []string{
+		"./ui/html/base.tmpl",
+		"./ui/html/partials/nav.tmpl",
+		"./ui/html/pages/home.tmpl",
 	}
 
-	// slice with the two template files
-	//files := []string{
-	//	"./ui/html/base.tmpl",
-	//	"./ui/html/partials/nav.tmpl",
-	//	"./ui/html/pages/home.tmpl",
-	//}
-
 	// use template.ParseFiles() to read the files in the slice
-	//ts, err := template.ParseFiles(files...)
-	//if err != nil {
-	//	app.serverError(w, r, err)
-	//	return
-	//}
-	//
-	//// Execute method on the template set to write the template content
-	//err = ts.ExecuteTemplate(w, "base", nil)
-	//if err != nil {
-	//	app.serverError(w, r, err)
-	//}
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
 
+	// create template data struct to hold the slice of snippets
+	data := templateData{
+		Snippets: snippets,
+	}
+
+	// Execute method on the template set to write the template content, use templateData struct
+	err = ts.ExecuteTemplate(w, "base", data)
+	if err != nil {
+		app.serverError(w, r, err)
+	}
 }
 
 // add snippetView handler function
