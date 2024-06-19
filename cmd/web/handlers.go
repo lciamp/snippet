@@ -80,8 +80,13 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// create templateData struct folding snippet data
+	data := &templateData{
+		Snippet: snippet,
+	}
+
 	// execute templates
-	err = ts.ExecuteTemplate(w, "base", snippet)
+	err = ts.ExecuteTemplate(w, "base", data)
 	if err != nil {
 		app.serverError(w, r, err)
 	}
