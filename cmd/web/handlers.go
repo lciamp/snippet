@@ -3,9 +3,8 @@ package main
 import (
 	"errors"
 	"fmt"
-	//"html/template"
+	"html/template"
 	"net/http"
-	"os"
 	"snippet.lciamp.xyz/internal/models"
 	"strconv"
 )
@@ -66,11 +65,32 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	// write snippet data as plain-text in http response
-	_, err = fmt.Fprintf(w, "%+v", snippet)
-	if err != nil {
-		os.Exit(1)
+
+	// slice for templates
+	files := []string{
+		"./ui/html/base.tmpl",
+		"./ui/html/partials/nav.tmpl",
+		"./ui/html/pages/view.tmpl",
 	}
+
+	// parse tmpl files
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	// execute templates
+	err = ts.ExecuteTemplate(w, "base", snippet)
+	if err != nil {
+		app.serverError(w, r, err)
+	}
+
+	// write snippet data as plain-text in http response
+	//_, err = fmt.Fprintf(w, "%+v", snippet)
+	//if err != nil {
+	//	os.Exit(1)
+	//}
 
 }
 

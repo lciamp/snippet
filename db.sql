@@ -35,7 +35,7 @@ INSERT INTO snippets (title, content, created, expires) VALUES (
     'First autumn morning',
     'First autumn morning\nthe mirror I stare into\nshows my father''s face.\n\n– Murakami Kijo',
     UTC_TIMESTAMP(),
-    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 7 DAY)
+    DATE_ADD(UTC_TIMESTAMP(), INTERVAL 365 DAY)
 );
 
 -- create new user
