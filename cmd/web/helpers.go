@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"path/filepath"
 	"runtime/debug"
@@ -46,4 +47,23 @@ func (nfs neuteredFileSystem) Open(path string) (http.File, error) {
 		}
 	}
 	return f, nil
+}
+
+func (app *application) render(w http.ResponseWriter, r *http.Request, status int, page string, data templateData) {
+	// get template from templateCache
+	ts, ok := app.templateCache[page]
+	if !ok {
+		err := fmt.Errorf("The template %s does not exist", page)
+		app.serverError(w, r, err)
+		return
+	}
+
+	// write http status code
+	w.WriteHeader(status)
+
+	// execute template set
+	err := ts.ExecuteTemplate(w, "base", data)
+	if err != nil {
+		app.serverError(w, r, err)
+	}
 }

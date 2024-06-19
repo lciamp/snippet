@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 	"snippet.lciamp.xyz/internal/models"
 	"strconv"
@@ -20,35 +19,35 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 	}
 
-	//// print snippets
-	//for _, snippet := range snippets {
-	//	fmt.Fprintf(w, "%+v\n", snippet)
+	//// slice with the template files
+	//files := []string{
+	//	"./ui/html/base.tmpl",
+	//	"./ui/html/partials/nav.tmpl",
+	//	"./ui/html/pages/home.tmpl",
 	//}
 
-	// slice with the template files
-	files := []string{
-		"./ui/html/base.tmpl",
-		"./ui/html/partials/nav.tmpl",
-		"./ui/html/pages/home.tmpl",
-	}
-
-	// use template.ParseFiles() to read the files in the slice
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, r, err)
-		return
-	}
-
-	// create template data struct to hold the slice of snippets
-	data := templateData{
+	// use new render helper
+	app.render(w, r, http.StatusOK, "home.tmpl", templateData{
 		Snippets: snippets,
-	}
+	})
 
-	// Execute method on the template set to write the template content, use templateData struct
-	err = ts.ExecuteTemplate(w, "base", data)
-	if err != nil {
-		app.serverError(w, r, err)
-	}
+	//// use template.ParseFiles() to read the files in the slice
+	//ts, err := template.ParseFiles(files...)
+	//if err != nil {
+	//	app.serverError(w, r, err)
+	//	return
+	//}
+
+	//// create template data struct to hold the slice of snippets
+	//data := templateData{
+	//	Snippets: snippets,
+	//}
+	//
+	//// Execute method on the template set to write the template content, use templateData struct
+	//err = ts.ExecuteTemplate(w, "base", data)
+	//if err != nil {
+	//	app.serverError(w, r, err)
+	//}
 }
 
 // add snippetView handler function
@@ -70,30 +69,35 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// slice for templates
-	files := []string{
-		"./ui/html/base.tmpl",
-		"./ui/html/partials/nav.tmpl",
-		"./ui/html/pages/view.tmpl",
-	}
-
-	// parse tmpl files
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, r, err)
-		return
-	}
-
-	// create templateData struct folding snippet data
-	data := &templateData{
+	// use new render helper
+	app.render(w, r, http.StatusOK, "view.tmpl", templateData{
 		Snippet: snippet,
-	}
+	})
 
-	// execute templates
-	err = ts.ExecuteTemplate(w, "base", data)
-	if err != nil {
-		app.serverError(w, r, err)
-	}
+	//// slice for templates
+	//files := []string{
+	//	"./ui/html/base.tmpl",
+	//	"./ui/html/partials/nav.tmpl",
+	//	"./ui/html/pages/view.tmpl",
+	//}
+	//
+	//// parse tmpl files
+	//ts, err := template.ParseFiles(files...)
+	//if err != nil {
+	//	app.serverError(w, r, err)
+	//	return
+	//}
+	//
+	//// create templateData struct folding snippet data
+	//data := &templateData{
+	//	Snippet: snippet,
+	//}
+	//
+	//// execute templates
+	//err = ts.ExecuteTemplate(w, "base", data)
+	//if err != nil {
+	//	app.serverError(w, r, err)
+	//}
 
 	// write snippet data as plain-text in http response
 	//_, err = fmt.Fprintf(w, "%+v", snippet)
