@@ -2,12 +2,8 @@ package main
 
 import "net/http"
 
-func (app *application) routes() *http.ServeMux {
+func (app *application) routes() http.Handler {
 	mux := http.NewServeMux()
-
-	// create file server for static files
-	/*	fileServer := http.FileServer(http.Dir("./ui/static"))
-		mux.Handle("GET /static/", http.StripPrefix("/static", fileServer))*/
 
 	//  create custom file server with dir listing disabled
 	fileServer := http.FileServer(neuteredFileSystem{http.Dir("./ui/static")})
@@ -21,5 +17,5 @@ func (app *application) routes() *http.ServeMux {
 	mux.HandleFunc("GET /snippet/create", app.snippetCreate)
 	mux.HandleFunc("POST /snippet/create", app.snippetCreatePost)
 
-	return mux
+	return commonHeaders(mux)
 }

@@ -10,8 +10,6 @@ import (
 
 // home handler function
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-	// use Header.Add() method to add custom header
-	w.Header().Add("Server", "Go")
 
 	//get last 10 snippets
 	snippets, err := app.snippets.Latest()
