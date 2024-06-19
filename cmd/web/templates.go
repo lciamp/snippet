@@ -3,14 +3,24 @@ package main
 import (
 	"html/template"
 	"path/filepath"
-
 	"snippet.lciamp.xyz/internal/models"
+	"time"
 )
 
 type templateData struct {
 	CurrentYear int
 	Snippet     models.Snippet
 	Snippets    []models.Snippet
+}
+
+// human date function
+func humanDate(t time.Time) string {
+	return t.Format("Jan 02 2006 at 15:04")
+}
+
+// initialize funcMap
+var functions = template.FuncMap{
+	"humanDate": humanDate,
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {
@@ -28,7 +38,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 		name := filepath.Base(page)
 
 		// parse base template file into a templateset
-		ts, err := template.ParseFiles("./ui/html/base.tmpl")
+		ts, err := template.New(name).Funcs(functions).ParseFiles("./ui/html/base.tmpl")
 		if err != nil {
 			return nil, err
 		}
