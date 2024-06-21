@@ -8,10 +8,12 @@
 
 html, body {
     height: 100%;
+    width: 100%;
 }
 
 body {
     line-height: 1.5;
+    width: 100%;
     background-color: #F1F3F6;
     color: #34495E;
     overflow-y: scroll;

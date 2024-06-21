@@ -1,6 +1,9 @@
 package main
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+)
 
 // middleware for common headers - be careful with CSP Headers, check browser logs
 func commonHeaders(next http.Handler) http.Handler {
@@ -30,6 +33,23 @@ func (app *application) logRequest(next http.Handler) http.Handler {
 		)
 
 		app.logger.Info("received request", "ip", ip, "proto", proto, "method", method, "uri", uri)
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+// middleware function to recover from panics
+func (app *application) recoverPanic(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			// use built-in recover function to see if there was a panic
+			if err := recover(); err != nil {
+				// set a connection close in header response
+				w.Header().Set("Connection", "close")
+				// send a 500 error
+				app.serverError(w, r, fmt.Errorf("%s", err))
+			}
+		}()
 
 		next.ServeHTTP(w, r)
 	})
