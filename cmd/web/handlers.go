@@ -56,10 +56,9 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 
 // add a snippet handler function to GET snippet
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
-	_, err := w.Write([]byte("Display form for creating a new snippet..."))
-	if err != nil {
-		fmt.Println("Error:", err)
-	}
+	data := app.newTemplateData(r)
+
+	app.render(w, r, http.StatusOK, "create.tmpl", data)
 }
 
 // add a snippet handler to POST snippet
