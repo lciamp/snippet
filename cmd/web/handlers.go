@@ -10,7 +10,6 @@ import (
 
 // home handler function
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
-	panic("something went wrong")
 
 	//get last 10 snippets
 	snippets, err := app.snippets.Latest()
