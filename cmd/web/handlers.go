@@ -63,10 +63,23 @@ func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 
 // add a snippet handler to POST snippet
 func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) {
-	// test
-	title := "O snail"
-	content := "O snail\nClimb Mount Fuji\nBut slowly, slowly\n\n-Kobayashi Issa"
-	expires := 7
+	// parse the form into a form map
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	// get title and content
+	title := r.PostForm.Get("title")
+	content := r.PostForm.Get("content")
+
+	// from data always returns a string, we need to convert to an integer
+	expires, err := strconv.Atoi(r.PostForm.Get("expires"))
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
 
 	// pass data to insert
 	id, err := app.snippets.Insert(title, content, expires)
