@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"snippet.lciamp.xyz/internal/models"
 	"strconv"
+	"strings"
+	"unicode/utf8"
 )
 
 // home handler function
@@ -78,6 +80,33 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 	expires, err := strconv.Atoi(r.PostForm.Get("expires"))
 	if err != nil {
 		app.serverError(w, r, err)
+		return
+	}
+
+	// create map for field errors
+	fieldErrors := make(map[string]string)
+
+	// check title is not blank or over 100 chars
+	// if either fails add error to fieldErrors
+	if strings.TrimSpace(title) == "" {
+		fieldErrors["title"] = "This field can not be blank"
+	} else if utf8.RuneCountInString(title) > 100 {
+		fieldErrors["title"] = "This field can not be greater than 100 characters"
+	}
+
+	// check if the content value is blank
+	if strings.TrimSpace(content) == "" {
+		fieldErrors["content"] = "This field can not be blank"
+	}
+
+	// check if the expires field matches (1, 7 oe 365)
+	if expires != 1 && expires != 7 && expires != 365 {
+		fieldErrors["expires"] = "This field must equal 1, 7 or 365"
+	}
+
+	// if there are any errors dump them in a plain text http response and return from handler
+	if len(fieldErrors) > 0 {
+		fmt.Fprint(w, fieldErrors)
 		return
 	}
 
