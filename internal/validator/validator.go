@@ -1,6 +1,7 @@
 package validator
 
 import (
+	"slices"
 	"strings"
 	"unicode/utf8"
 )
@@ -43,4 +44,9 @@ func NotBlank(value string) bool {
 // MaxChars returns true if the value is less than n characters
 func MaxChars(value string, n int) bool {
 	return utf8.RuneCountInString(value) <= n
+}
+
+// PermittedValue return true if the value is in a list of permitted values
+func PermittedValue[T comparable](value T, permittedValues ...T) bool {
+	return slices.Contains(permittedValues, value)
 }
