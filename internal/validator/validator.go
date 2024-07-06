@@ -22,3 +22,10 @@ func (v *Validator) AddFieldErrors(key, message string) {
 		v.FieldErrors[key] = message
 	}
 }
+
+// CheckField adds an error to the FieldErrors map only if it fails validation
+func (v *Validator) CheckField(ok bool, key, message string) {
+	if !ok {
+		v.AddFieldErrors(key, message)
+	}
+}
