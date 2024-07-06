@@ -1,5 +1,7 @@
 package validator
 
+import "strings"
+
 type Validator struct {
 	FieldErrors map[string]string
 }
@@ -28,4 +30,9 @@ func (v *Validator) CheckField(ok bool, key, message string) {
 	if !ok {
 		v.AddFieldErrors(key, message)
 	}
+}
+
+// NotBlank returns true if field is not a blank string
+func (v *Validator) NotBlank(value string) bool {
+	return strings.TrimSpace(value) != ""
 }
