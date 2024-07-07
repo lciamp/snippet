@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 	"snippet.lciamp.xyz/internal/models"
+	"snippet.lciamp.xyz/internal/validator"
 	"strconv"
 	"strings"
-	"unicode/utf8"
 )
 
 // home handler function
@@ -71,10 +71,10 @@ func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 // create struct to deal with errors.
 // note: all fields start with a capital letter so they can be exported to templates
 type snippetCreateForm struct {
-	Title       string
-	Content     string
-	Expires     int
-	FieldErrors map[string]string
+	Title   string
+	Content string
+	Expires int
+	validator.Validator
 }
 
 // add a snippet handler to POST snippet
@@ -95,21 +95,20 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 
 	// create snippetCreateForm struct containing the values from the form and empty map for errors
 	form := snippetCreateForm{
-		Title:       r.PostForm.Get("title"),
-		Content:     r.PostForm.Get("content"),
-		Expires:     expires,
-		FieldErrors: map[string]string{},
+		Title:   r.PostForm.Get("title"),
+		Content: r.PostForm.Get("content"),
+		Expires: expires,
 	}
 
 	// update validation checks to use new struct
 
 	// check title is not blank or over 100 chars
-	// if either fails add error to fieldErrors
-	if strings.TrimSpace(form.Title) == "" {
-		form.FieldErrors["title"] = "This field can not be blank"
-	} else if utf8.RuneCountInString(form.Title) > 100 {
-		form.FieldErrors["title"] = "This field can not be greater than 100 characters"
-	}
+	form.CheckField(validator.NotBlank(form.Title), "title", "This field can not be blank")
+	form.CheckField(validator.MaxChars(form.Title, 100), "title", "This field can not be more than 100 chars")
+
+	// check if field is blank and if expires is a valid value
+	form.CheckField(validator.NotBlank(form.Content), "content", "This field can not be blank")
+	form.CheckField(validator.PermittedValue(form.Expires, 1, 7, 365), "expired", "This field must equal 1, 7, or 365")
 
 	// check if the content value is blank
 	if strings.TrimSpace(form.Content) == "" {
