@@ -7,7 +7,6 @@ import (
 	"snippet.lciamp.xyz/internal/models"
 	"snippet.lciamp.xyz/internal/validator"
 	"strconv"
-	"strings"
 )
 
 // home handler function
@@ -110,18 +109,8 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 	form.CheckField(validator.NotBlank(form.Content), "content", "This field can not be blank")
 	form.CheckField(validator.PermittedValue(form.Expires, 1, 7, 365), "expired", "This field must equal 1, 7, or 365")
 
-	// check if the content value is blank
-	if strings.TrimSpace(form.Content) == "" {
-		form.FieldErrors["content"] = "This field can not be blank"
-	}
-
-	// check if the expires field matches (1, 7 oe 365)
-	if expires != 1 && expires != 7 && expires != 365 {
-		form.FieldErrors["expires"] = "This field must equal 1, 7 or 365"
-	}
-
-	// if any errors redisplay then create template with new form
-	if len(form.FieldErrors) > 0 {
+	// use validator Valid() to validate if there are any errors
+	if !form.Valid() {
 		data := app.newTemplateData(r)
 		data.Form = form
 		app.render(w, r, http.StatusUnprocessableEntity, "create.tmpl", data)
