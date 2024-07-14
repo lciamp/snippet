@@ -55,6 +55,15 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// create struct to deal with errors.
+// note: all fields start with a capital letter so they can be exported to templates
+type snippetCreateForm struct {
+	Title   string
+	Content string
+	Expires int
+	validator.Validator
+}
+
 // add a snippet handler function to GET snippet
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 	data := app.newTemplateData(r)
@@ -65,15 +74,6 @@ func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app.render(w, r, http.StatusOK, "create.tmpl", data)
-}
-
-// create struct to deal with errors.
-// note: all fields start with a capital letter so they can be exported to templates
-type snippetCreateForm struct {
-	Title   string
-	Content string
-	Expires int
-	validator.Validator
 }
 
 // add a snippet handler to POST snippet
