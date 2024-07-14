@@ -58,10 +58,10 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 // create struct to deal with errors.
 // note: all fields start with a capital letter so they can be exported to templates
 type snippetCreateForm struct {
-	Title   string
-	Content string
-	Expires int
-	validator.Validator
+	Title               string `form:"title"`
+	Content             string `form:"content"`
+	Expires             int    `form:"expires"`
+	validator.Validator `form:"-"`
 }
 
 // add a snippet handler function to GET snippet
@@ -85,18 +85,13 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	// from data always returns a string, we need to convert to an integer
-	expires, err := strconv.Atoi(r.PostForm.Get("expires"))
+	// create new snippet form
+	var form snippetCreateForm
+
+	err = app.formDecoder.Decode(&form, r.PostForm)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
-	}
-
-	// create snippetCreateForm struct containing the values from the form and empty map for errors
-	form := snippetCreateForm{
-		Title:   r.PostForm.Get("title"),
-		Content: r.PostForm.Get("content"),
-		Expires: expires,
 	}
 
 	// update validation checks to use new struct
