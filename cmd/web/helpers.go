@@ -86,6 +86,7 @@ func (app *application) newTemplateData(r *http.Request) templateData {
 	}
 }
 
+// decodePostForm helper
 func (app *application) decodePostForm(r *http.Request, dst any) error {
 	// call parse form
 	err := r.ParseForm()

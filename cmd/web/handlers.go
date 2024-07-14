@@ -78,23 +78,15 @@ func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
 
 // add a snippet handler to POST snippet
 func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request) {
-	// parse the form into a form map
-	err := r.ParseForm()
-	if err != nil {
-		app.clientError(w, http.StatusBadRequest)
-		return
-	}
-
-	// create new snippet form
+	// create form
 	var form snippetCreateForm
 
-	err = app.formDecoder.Decode(&form, r.PostForm)
+	// use decode form helper
+	err := app.decodePostForm(r, &form)
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
 		return
 	}
-
-	// update validation checks to use new struct
 
 	// check title is not blank or over 100 chars
 	form.CheckField(validator.NotBlank(form.Title), "title", "This field can not be blank")
