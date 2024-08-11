@@ -45,4 +45,4 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON snippetbox.* TO 'web'@'localhost';
 ALTER USER 'web'@'localhost' IDENTIFIED BY 'hudson';
 
 -- get go mysql driver
-go get github.com/go-sql-driver/mysql@v1
+-- go get github.com/go-sql-driver/mysql@v1
