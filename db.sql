@@ -46,3 +46,13 @@ ALTER USER 'web'@'localhost' IDENTIFIED BY 'hudson';
 
 -- get go mysql driver
 go get github.com/go-sql-driver/mysql@v1
+
+
+-- table for sessions
+CREATE TABLE sessions (
+    token CHAR(43) PRIMARY KEY,
+    data BLOB NOT NULL,
+    expiry TIMESTAMP(6) NOT NULL
+);
+
+CREATE INDEX sessions_expiry_idx ON sessions (expiry);
