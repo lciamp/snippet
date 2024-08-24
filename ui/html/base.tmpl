@@ -13,6 +13,9 @@
             <h1><a href="/">Lou's Snippetbox</a></h1>
         </header>
         {{template "nav" .}}
+        {{ with .Flash }}
+            <div class="flash">{{.}}</div>
+        {{ end }}
         <main>
             {{template "main" .}}
         </main>

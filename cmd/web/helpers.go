@@ -62,7 +62,7 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, status in
 		return
 	}
 
-	// initalize new buffer
+	// initialize new buffer
 	buf := new(bytes.Buffer)
 
 	// write template to buffer and check for runtime errors
