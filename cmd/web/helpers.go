@@ -53,6 +53,7 @@ func (nfs neuteredFileSystem) Open(path string) (http.File, error) {
 	return f, nil
 }
 
+// render template
 func (app *application) render(w http.ResponseWriter, r *http.Request, status int, page string, data templateData) {
 	// get template from templateCache
 	ts, ok := app.templateCache[page]
