@@ -65,11 +65,19 @@ func main() {
 		sessionManager: sessionManager,
 	}
 
-	// start server
-	logger.Info("starting server", slog.String("addr", *addr))
-	err = http.ListenAndServe(*addr, app.routes())
+	// create new htt.Server struct. Set addr and Handler fields
+	svr := &http.Server{
+		Addr:    *addr,
+		Handler: app.routes(),
+	}
+
+	logger.Info("starting server", "addr", svr.Addr)
+
+	// call ListenAndServe on the http.Server struct
+	err = svr.ListenAndServe()
 	logger.Error(err.Error())
 	os.Exit(1)
+
 }
 
 // wrap sql.Open() and return sql.DB connection pool for DSN
