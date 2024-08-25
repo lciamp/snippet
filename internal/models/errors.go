@@ -9,8 +9,8 @@ var (
 	ErrNoRecord = errors.New("models: no matching record found")
 
 	// ErrInvalidCredentials login with incorrect email or password
-	ErrInvalidCredentials = err.New("models: invalid credentials")
+	ErrInvalidCredentials = errors.New("models: invalid credentials")
 
 	// ErrDuplicateEmail signup with an email that's already in use
-	ErrDuplicateEmail = err.New("models: duplicate email")
+	ErrDuplicateEmail = errors.New("models: duplicate email")
 )
