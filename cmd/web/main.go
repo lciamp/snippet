@@ -74,13 +74,17 @@ func main() {
 		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
 	}
 
-	// create new htt.Server struct. Set addr and Handler fields
+	// create new http.Server struct. Set addr and Handler fields
 	svr := &http.Server{
 		Addr:    *addr,
 		Handler: app.routes(),
 		// create a *log.Logger from our slog handler, which writes error level logs and assign it to ErrorLog.
 		ErrorLog:  slog.NewLogLogger(logger.Handler(), slog.LevelError),
 		TLSConfig: tlsConfig,
+		// add timeouts
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 
 	logger.Info("starting server", "addr", svr.Addr)
