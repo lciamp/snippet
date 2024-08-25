@@ -55,6 +55,8 @@ func main() {
 	sessionManager := scs.New()
 	sessionManager.Store = mysqlstore.New(db)
 	sessionManager.Lifetime = 12 * time.Hour
+	// make session cookie secure
+	sessionManager.Cookie.Secure = true
 
 	// create app struct for dependency injections
 	app := &application{
@@ -75,8 +77,8 @@ func main() {
 
 	logger.Info("starting server", "addr", svr.Addr)
 
-	// call ListenAndServe on the http.Server struct
-	err = svr.ListenAndServe()
+	// use ListenAndServeTLS() to start https server
+	err = svr.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
 	logger.Error(err.Error())
 	os.Exit(1)
 
