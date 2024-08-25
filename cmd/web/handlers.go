@@ -123,4 +123,26 @@ func (app *application) snippetCreatePost(w http.ResponseWriter, r *http.Request
 	// redirect to new snippet
 	http.Redirect(w, r, fmt.Sprintf("/snippet/view/%d", id), http.StatusSeeOther)
 
+
+	// user login handlers
+	func (app *application) userSignup(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "Display signin form")
+	}
+
+	func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "create new user")
+	}
+
+	func (app *application) userLogin(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "Display login form")
+	}
+
+	func (app *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "aut and login user")
+	}
+
+	func (app *application) userLogoutPost(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "logout user")
+	}
+
 }
