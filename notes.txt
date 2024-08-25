@@ -12,3 +12,6 @@ fix: go run ./cmd/web --addr=":80"
 
 NOTE:
 using an application struct will not work for dependency injection if handlers are in different packages
+
+self-signed TLS certificates:
+go run /opt/homebrew/opt/go/libexec/src/crypto/tls/generate_cert.go --host=localhost
