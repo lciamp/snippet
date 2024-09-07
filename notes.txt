@@ -19,3 +19,5 @@ go run /opt/homebrew/opt/go/libexec/src/crypto/tls/generate_cert.go --host=local
 wc3 standard regex for validating emails:
 "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
 
+make sure you have the latest version of bcrypt:
+go get golang.org/x/crypto/bcrypt@latest
