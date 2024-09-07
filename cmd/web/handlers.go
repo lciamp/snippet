@@ -163,8 +163,26 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 		app.render(w, r, http.StatusUnprocessableEntity, "signup.tmpl", data)
 	}
 
-	// or send placeholder
-	fmt.Fprintln(w, "Create new user.")
+	// try to put new user in DB
+	err = app.users.Insert(form.Name, form.Email, form.Password)
+	if err != nil {
+		if errors.Is(err, models.ErrDuplicateEmail) {
+			form.AddFieldErrors("email", "Email address already in use")
+
+			data := app.newTemplateData(r)
+			data.Form = form
+			app.render(w, r, http.StatusUnprocessableEntity, "signup.tmpl", data)
+		} else {
+			app.serverError(w, r, err)
+		}
+		return
+	}
+
+	// flash signup worked
+	app.sessionManager.Put(r.Context(), "flash", "Signup Successful. Please login")
+
+	// redirect to login
+	http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 
 }
 
