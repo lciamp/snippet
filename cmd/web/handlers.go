@@ -189,7 +189,7 @@ func (app *application) userSignupPost(w http.ResponseWriter, r *http.Request) {
 type userLoginForm struct {
 	Email               string `form:"email"`
 	Password            string `form:"password"`
-	validator.Validator `form:"-""`
+	validator.Validator `form:"-"`
 }
 
 func (app *application) userLogin(w http.ResponseWriter, r *http.Request) {
