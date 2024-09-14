@@ -200,7 +200,40 @@ func (app *application) userLogin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "aut and login user")
+	var form userLoginForm
+
+	err := app.decodePostForm(r, &form)
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	// validate the form. Check that email and pw are there and email matches the regex
+	form.CheckField(validator.NotBlank(form.Email), "email", "This field is required")
+	form.CheckField(validator.Matches(form.Email, validator.EmailRx), "password", "This should eb a valid email")
+	form.CheckField(validator.NotBlank(form.Password), "password", "This field is required")
+
+	if !form.Valid() {
+		data := app.newTemplateData(r)
+		data.Form = form
+		app.render(w, r, http.StatusUnprocessableEntity, "login.tmpl", data)
+		return
+	}
+
+	// check for valid credentials
+	id, err := app.users.Authenticate(form.Email, form.Password)
+	if err != nil {
+		if errors.Is(err, models.ErrInvalidCredentials) {
+			form.AddNonFieldErrors("Email or Password is incorrect")
+
+			data := app.newTemplateData(r)
+			data.Form = form
+			app.render(w, r, http.StatusUnprocessableEntity, "login.tmpl", data)
+		} else {
+			app.serverError(w, r, err)
+		}
+		return
+	}
 }
 
 func (app *application) userLogoutPost(w http.ResponseWriter, r *http.Request) {
