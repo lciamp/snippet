@@ -210,7 +210,7 @@ func (app *application) userLoginPost(w http.ResponseWriter, r *http.Request) {
 
 	// validate the form. Check that email and pw are there and email matches the regex
 	form.CheckField(validator.NotBlank(form.Email), "email", "This field is required")
-	form.CheckField(validator.Matches(form.Email, validator.EmailRx), "password", "This should eb a valid email")
+	form.CheckField(validator.Matches(form.Email, validator.EmailRx), "password", "This should be a valid email")
 	form.CheckField(validator.NotBlank(form.Password), "password", "This field is required")
 
 	if !form.Valid() {
