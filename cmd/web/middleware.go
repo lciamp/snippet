@@ -27,9 +27,7 @@ func (app *application) logRequest(next http.Handler) http.Handler {
 			method = r.Method
 			uri    = r.URL.RequestURI()
 		)
-
 		app.logger.Info("received request", "ip", ip, "proto", proto, "method", method, "uri", uri)
-
 		next.ServeHTTP(w, r)
 	})
 }
@@ -46,6 +44,21 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 				app.serverError(w, r, fmt.Errorf("%s", err))
 			}
 		}()
+		next.ServeHTTP(w, r)
+	})
+}
+
+// requireAuthentication redirect to login if not authenticated
+func (app *application) requireAuthentication(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// if not auth redirect
+		if !app.IsAuthenticated(r) {
+			http.Redirect(w, r, "user/login", http.StatusSeeOther)
+			return
+		}
+		w.Header().Add("Cache-Control", "no-store")
+
+		//call next
 		next.ServeHTTP(w, r)
 	})
 }
