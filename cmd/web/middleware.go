@@ -51,11 +51,13 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 // requireAuthentication redirect to login if not authenticated
 func (app *application) requireAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// if not auth redirect
+		// if not auth redirect to login
 		if !app.IsAuthenticated(r) {
 			http.Redirect(w, r, "user/login", http.StatusSeeOther)
 			return
 		}
+
+		// so pages that require auth are not stored in user browser cache
 		w.Header().Add("Cache-Control", "no-store")
 
 		//call next

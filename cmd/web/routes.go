@@ -18,22 +18,24 @@ func (app *application) routes() http.Handler {
 	// new middleware chain for session management / dynamic routes
 	dynamic := alice.New(app.sessionManager.LoadAndSave)
 
-	// add handler functions to endpoints
-	// switch back to handle instead of HandleFunc for dynamic middleware (ThenFunc returns a Handler)
+	// dynamic routes (unprotected)
 	mux.Handle("GET /{$}", dynamic.ThenFunc(app.home)) // restrict for / only
 	mux.Handle("GET /snippet/view/{id}", dynamic.ThenFunc(app.snippetView))
-	mux.Handle("GET /snippet/create", dynamic.ThenFunc(app.snippetCreate))
-	mux.Handle("POST /snippet/create", dynamic.ThenFunc(app.snippetCreatePost))
-	// new routes for user login/out/create
 	mux.Handle("GET /user/signup", dynamic.ThenFunc(app.userSignup))
 	mux.Handle("POST /user/signup", dynamic.ThenFunc(app.userSignupPost))
 	mux.Handle("GET /user/login", dynamic.ThenFunc(app.userLogin))
 	mux.Handle("POST /user/login", dynamic.ThenFunc(app.userLoginPost))
-	mux.Handle("POST /user/logout", dynamic.ThenFunc(app.userLogoutPost))
+
+	// middleware for protected routes
+	protected := dynamic.Append(app.requireAuthentication)
+
+	// protected routes (protected by session)
+	mux.Handle("GET /snippet/create", protected.ThenFunc(app.snippetCreate))
+	mux.Handle("POST /snippet/create", protected.ThenFunc(app.snippetCreatePost))
+	mux.Handle("POST /user/logout", protected.ThenFunc(app.userLogoutPost))
 
 	// create middleware chain using our standard middleware
 	standard := alice.New(app.recoverPanic, app.logRequest, commonHeaders)
-
-	// use the standard middleware
+	// use the standard middleware on all routes
 	return standard.Then(mux)
 }
