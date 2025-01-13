@@ -2,8 +2,21 @@ package main
 
 import (
 	"fmt"
+	"github.com/justinas/nosurf"
 	"net/http"
 )
+
+// noSurf middleware using custom CSRF cookie
+func noSurf(next http.Handler) http.Handler {
+	csrfHandler := nosurf.new(next)
+	csrfHandler.SetBaseCookie(http.Cookie{
+		HttpOnly: true,
+		Path:     "/",
+		Secure:   true,
+	})
+
+	return csrfHandler
+}
 
 // middleware for common headers - be careful with CSP Headers, check browser logs
 func commonHeaders(next http.Handler) http.Handler {
@@ -53,7 +66,7 @@ func (app *application) requireAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// if not auth redirect to login
 		if !app.IsAuthenticated(r) {
-			http.Redirect(w, r, "user/login", http.StatusSeeOther)
+			http.Redirect(w, r, "/user/login", http.StatusSeeOther)
 			return
 		}
 
