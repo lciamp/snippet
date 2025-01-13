@@ -8,7 +8,7 @@ import (
 
 // noSurf middleware using custom CSRF cookie
 func noSurf(next http.Handler) http.Handler {
-	csrfHandler := nosurf.new(next)
+	csrfHandler := nosurf.New(next)
 	csrfHandler.SetBaseCookie(http.Cookie{
 		HttpOnly: true,
 		Path:     "/",
