@@ -2,6 +2,8 @@
 
 {{define "main"}}
 <form action='/user/login' method='POST' novalidate>
+    <!-- CSRF Token -->
+    <input type='hidden' name='csrf_token' value='{{.CSRFToken}}'>
     <!-- loop over NonFieldErrors -->
     {{range .Form.NonFieldErrors}}
         <div class='error'>{{.}}</div>
