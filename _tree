@@ -1,0 +1,47 @@
+.
+├── README.md
+├── _tree
+├── cmd
+│   └── web
+│       ├── context.go
+│       ├── handlers.go
+│       ├── helpers.go
+│       ├── main.go
+│       ├── middleware.go
+│       ├── routes.go
+│       └── templates.go
+├── db.sql
+├── go.mod
+├── go.sum
+├── internal
+│   ├── models
+│   │   ├── errors.go
+│   │   ├── snippets.go
+│   │   └── users.go
+│   └── validator
+│       └── validator.go
+├── notes.txt
+├── tls
+│   ├── cert.pem
+│   └── key.pem
+└── ui
+    ├── html
+    │   ├── base.tmpl
+    │   ├── pages
+    │   │   ├── create.tmpl
+    │   │   ├── home.tmpl
+    │   │   ├── login.tmpl
+    │   │   ├── signup.tmpl
+    │   │   └── view.tmpl
+    │   └── partials
+    │       └── nav.tmpl
+    └── static
+        ├── css
+        │   └── main.css
+        ├── img
+        │   ├── favicon.ico
+        │   └── logo.png
+        └── js
+            └── main.js
+
+15 directories, 30 files

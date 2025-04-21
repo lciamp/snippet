@@ -16,7 +16,7 @@ func (app *application) routes() http.Handler {
 	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
 
 	// new middleware chain for session management / dynamic routes
-	dynamic := alice.New(app.sessionManager.LoadAndSave, noSurf)
+	dynamic := alice.New(app.sessionManager.LoadAndSave, noSurf, app.authenticate)
 
 	// dynamic routes (unprotected)
 	mux.Handle("GET /{$}", dynamic.ThenFunc(app.home)) // restrict for / only
