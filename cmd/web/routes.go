@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/justinas/alice"
 	"net/http"
+	"snippet.lciamp.xyz/ui"
 )
 
 // update return to http.Header
@@ -11,9 +12,9 @@ func (app *application) routes() http.Handler {
 
 	//  create custom file server with dir listing disabled
 	// don't wrap static routes with session middleware
-	fileServer := http.FileServer(neuteredFileSystem{http.Dir("./ui/static")})
+	//fileServer := http.FileServer(neuteredFileSystem{http.Dir("./ui/static")})
 	mux.Handle("/static", http.NotFoundHandler())
-	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
+	mux.Handle("GET /static/", http.FileServerFS(ui.Files))
 
 	// new middleware chain for session management / dynamic routes
 	dynamic := alice.New(app.sessionManager.LoadAndSave, noSurf, app.authenticate)
