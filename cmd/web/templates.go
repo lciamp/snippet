@@ -2,8 +2,10 @@ package main
 
 import (
 	"html/template"
+	"io/fs"
 	"path/filepath"
 	"snippet.lciamp.xyz/internal/models"
+	"snippet.lciamp.xyz/ui"
 	"time"
 )
 
@@ -30,31 +32,26 @@ var functions = template.FuncMap{
 func newTemplateCache() (map[string]*template.Template, error) {
 	cache := map[string]*template.Template{}
 
-	// use glob to get all templates from path
-	pages, err := filepath.Glob("./ui/html/pages/*.tmpl")
+	// use glob to get all templates from embedded filesystem
+	pages, err := fs.Glob(ui.Files, "html/pages/*.tmpl")
 	if err != nil {
 		return nil, err
 	}
 
-	// loop through page filepaths
+	// loop through page file paths
 	for _, page := range pages {
 		// extract name from file path
 		name := filepath.Base(page)
 
-		// parse base template file into a templateset
-		ts, err := template.New(name).Funcs(functions).ParseFiles("./ui/html/base.tmpl")
-		if err != nil {
-			return nil, err
+		// slice of filepath patterns with templates we want to parse
+		patterns := []string{
+			"html/base.tmpl",
+			"html/partials/*.tmpl",
+			page,
 		}
 
-		// parse Glob to add any partials
-		ts, err = ts.ParseGlob("./ui/html/partials/*.tmpl")
-		if err != nil {
-			return nil, err
-		}
-
-		// add page template
-		ts, err = ts.ParseFiles(page)
+		// use ParseF() instead of ParseFiles to parse the template files
+		ts, err := template.New(name).Funcs(functions).ParseFS(ui.Files, patterns...)
 		if err != nil {
 			return nil, err
 		}
